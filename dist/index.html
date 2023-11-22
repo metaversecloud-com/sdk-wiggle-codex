@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Wiggle</title>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+    <link href="https://sdk-style.s3.amazonaws.com/sdk.css" rel="stylesheet" />
+    <link type="text/css" rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <div id="logo" class="textBox bottomRight"></div>
+    <div id="wiggle-length" class="textBox"></div>
+    <div id="score" class="textBox"></div>
+    <div id="allTimeStats">
+      <div class="statsList">
+        <div id="level" class="statTextBox left"></div>
+        <div id="xp" class="statTextBox right"></div>
+        <div id="blocks" class="statTextBox left"></div>
+        <div id="blocksPerGame" class="statTextBox right"></div>
+      </div>
+    </div>
+    <div id="instructions">
+      <h2>Instructions</h2>
+      <ul>
+        <li>Eat food and block snakes to grow</li>
+        <li>Watch out! You shrink over time</li>
+        <li>Increase score by blocking players</li>
+        <li>Blocking bots doesn't affect score</li>
+      </ul>
+      <div id="spectating" class="hidden">
+        <h3>Spectating</h3>
+        <p>Walk into game zone to play</p>
+      </div>
+    </div>
+    <button id="joinGame" class="hidden">Join Game</button>
+    <button id="tryAgain" disabled>Try Again ?</button>
+    <div id="error" class="p3 text-error" style="position: fixed; bottom: 10; text-align: center"></div>
+    <script src="bundle.js" type="text/javascript"></script>
+  </body>
+</html>
