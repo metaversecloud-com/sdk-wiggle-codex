@@ -8,7 +8,6 @@ export const getVisitor = async (credentials) => {
     if (!visitor || !visitor.username) throw "Not in world";
 
     await visitor.fetchDataObject();
-    console.log("🚀 ~ file: getVisitor.js:16 ~ getVisitor ~ visitor.dataObject:", visitor.dataObject);
     try {
       const lockId = `${visitorId}-lastVisited-${new Date(Math.round(new Date().getTime() / 60000) * 60000)}`;
       if (!visitor.dataObject || !visitor.dataObject?.lastVisited) {

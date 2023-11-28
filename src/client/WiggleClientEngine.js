@@ -65,7 +65,7 @@ export default class WiggleClientEngine extends ClientEngine {
     return super.connect().then(() => {
       this.socket.on("spectating", () => {
         console.log("spectating");
-        document.querySelector("#spectating").className = "showOpaque";
+        document.querySelector("#spectating").className = "show";
       });
 
       this.socket.on("notinroom", () => {

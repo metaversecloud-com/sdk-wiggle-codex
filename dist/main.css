@@ -7,10 +7,11 @@ body {
   cursor: crosshair;
 }
 h2,
+h3,
+p,
 a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
 }
 canvas {
   width: 100%;
@@ -85,9 +86,6 @@ canvas {
   opacity: 1 !important;
   pointer-events: all;
 }
-.showOpaque {
-  opacity: 0.6;
-}
 #spectating {
   color: white;
   position: absolute;
@@ -105,6 +103,7 @@ canvas {
   width: 100%;
   opacity: 1;
   transition: all 0.5s ease-out;
+  height: 100vh;
 }
 #instructions ul {
   margin-top: 5;
