@@ -12,7 +12,7 @@ concurrency:
 env:
   REGISTRY: '368076259134.dkr.ecr.us-east-1.amazonaws.com'
   REPOSITORY: 'sdk-example'
-  IMAGE_TAG: ${{ github.event.repository.name }}
+  IMAGE_TAG: ${{ github.event.repository.name }}-new
   GCP_PROJECT_ID: "topia-gcp" #${{ secrets.GCP_PROJECT_ID }}
   #GCP_ARTIFACTORY: 'us-west1-docker.pkg.dev'
   GCP_REPOSITORY: 'sdk-apps'
@@ -55,4 +55,4 @@ jobs:
   
       - name: Publish
         run: |
-          aws ecs update-service --service sdk-wiggle-dev-topia-svc --force-new-deployment --cluster SDK-Example-CLS
+          aws ecs update-service --service sdk-wiggle-dev-topia0-svc --force-new-deployment --cluster SDK-Example-CLS
