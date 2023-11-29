@@ -1,0 +1,110 @@
+body {
+  background-color: #020202;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: white;
+  cursor: crosshair;
+}
+h2,
+h3,
+p,
+a {
+  color: white;
+  text-decoration: none;
+}
+canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.textBox {
+  margin: 10px 10px 0px 10px;
+  display: inline-block;
+  transition: all 0.5s ease-out;
+}
+.textBox.bottomRight {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.statTextBox {
+  margin: 10px 15px 0px 15px;
+  display: inline-block;
+  transition: all 0.5s ease-out;
+}
+
+#tryAgain,
+#joinGame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 4px;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 0.2rem 1.8rem 0.1rem 1.8rem;
+  font-size: 20;
+  transition: all 0.5s ease-out;
+  border-bottom: 1px solid;
+  border-top: 1px solid;
+  box-shadow: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+#joinGame {
+  opacity: 1;
+  pointer-events: all;
+}
+#joinGame:disabled {
+  opacity: 0;
+  display: none;
+}
+.lostGame #tryAgain {
+  opacity: 1;
+  pointer-events: all;
+}
+#adminControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 200;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-50%);
+  flex-wrap: wrap;
+  transition: all 0.5s ease-out;
+}
+.hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.show {
+  opacity: 1 !important;
+  pointer-events: all;
+}
+#spectating {
+  color: white;
+  position: absolute;
+  transform: translateX(-50%) translateY(-50%);
+  left: 50%;
+  top: 50%;
+  text-align: center;
+  cursor: crosshair;
+}
+#instructions {
+  position: absolute;
+  left: 10;
+  top: 10;
+  cursor: crosshair;
+  width: 100%;
+  opacity: 1;
+  transition: all 0.5s ease-out;
+  height: 100vh;
+}
+#instructions ul {
+  margin-top: 5;
+}
