@@ -33,14 +33,13 @@ var getVisitor = /*#__PURE__*/function () {
           _context.next = 9;
           return visitor.fetchDataObject();
         case 9:
-          console.log("🚀 ~ file: getVisitor.js:16 ~ getVisitor ~ visitor.dataObject:", visitor.dataObject);
-          _context.prev = 10;
+          _context.prev = 9;
           lockId = "".concat(visitorId, "-lastVisited-").concat(new Date(Math.round(new Date().getTime() / 60000) * 60000));
           if (!(!visitor.dataObject || !((_visitor$dataObject = visitor.dataObject) !== null && _visitor$dataObject !== void 0 && _visitor$dataObject.lastVisited))) {
-            _context.next = 17;
+            _context.next = 16;
             break;
           }
-          _context.next = 15;
+          _context.next = 14;
           return visitor.setDataObject({
             lastVisited: Date.now()
           }, {
@@ -49,11 +48,11 @@ var getVisitor = /*#__PURE__*/function () {
             },
             releaseLock: true
           });
-        case 15:
-          _context.next = 19;
+        case 14:
+          _context.next = 18;
           break;
-        case 17:
-          _context.next = 19;
+        case 16:
+          _context.next = 18;
           return visitor.updateDataObject({
             lastVisited: Date.now()
           }, {
@@ -62,19 +61,19 @@ var getVisitor = /*#__PURE__*/function () {
             },
             releaseLock: true
           });
-        case 19:
-          _context.next = 24;
+        case 18:
+          _context.next = 23;
           break;
-        case 21:
-          _context.prev = 21;
-          _context.t0 = _context["catch"](10);
+        case 20:
+          _context.prev = 20;
+          _context.t0 = _context["catch"](9);
           (0, _errorHandler.errorHandler)({
             credentials: credentials,
             error: _context.t0,
             functionName: "getVisitor",
             message: "Error updating visitor object"
           });
-        case 24:
+        case 23:
           if (!visitor.privateZoneId || visitor.privateZoneId !== assetId) {
             // Not in the private zone. Can watch, but can't play.
             visitor.username = null;
@@ -83,8 +82,8 @@ var getVisitor = /*#__PURE__*/function () {
             success: true,
             visitor: visitor
           });
-        case 28:
-          _context.prev = 28;
+        case 27:
+          _context.prev = 27;
           _context.t1 = _context["catch"](0);
           message = "Error getting visitor";
           (0, _errorHandler.errorHandler)({
@@ -97,11 +96,11 @@ var getVisitor = /*#__PURE__*/function () {
             message: message,
             success: false
           });
-        case 33:
+        case 32:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 28], [10, 21]]);
+    }, _callee, null, [[0, 27], [9, 20]]);
   }));
   return function getVisitor(_x) {
     return _ref.apply(this, arguments);

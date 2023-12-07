@@ -110,16 +110,8 @@ var WiggleRenderer = /*#__PURE__*/function (_Renderer) {
       var timeInt = parseInt(time);
       // Only update DOM on every 18th or so draw
       if (isPlayer && timeInt % 18 === 0) {
-        var xp = w.stat_XP ? w.stat_XP : "";
-        var level = w.stat_level ? w.stat_level : "";
-        var blocks = w.stat_blocks ? w.stat_blocks : "";
-        var blocksPerGame = w.stat_blocksPerGame ? w.stat_blocksPerGame : "";
         document.getElementById("wiggle-length").innerHTML = "Your Length: " + w.bodyParts.length;
         document.getElementById("score").innerHTML = "Your Score: " + w.score;
-        document.getElementById("xp").innerHTML = "XP: " + xp;
-        document.getElementById("level").innerHTML = "Level: " + level;
-        document.getElementById("blocks").innerHTML = "Blocks: " + blocks;
-        document.getElementById("blocksPerGame").innerHTML = "Per Game: " + blocksPerGame;
       }
     }
   }, {

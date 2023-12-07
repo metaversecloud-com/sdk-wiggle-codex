@@ -37,8 +37,6 @@
     "dev": "webpack --watch",
     "link-sdk": "yalc link @rtsdk/topia",
     "unlink-sdk": "yalc remove @rtsdk/topia",
-    "link-sdkcomponents": "yalc link @rtsdk/topiacomponents",
-    "unlink-sdkcomponents": "yalc remove @rtsdk/topia",
     "link-lancetopia": "yalc link @rtsdk/lance-topia",
     "unlink-lancetopia": "yalc remove @rtsdk/lance-topia"
   },
