@@ -98,7 +98,7 @@ var WiggleClientEngine = /*#__PURE__*/function (_ClientEngine) {
       return _get(_getPrototypeOf(WiggleClientEngine.prototype), "connect", this).call(this).then(function () {
         _this2.socket.on("spectating", function () {
           console.log("spectating");
-          document.querySelector("#spectating").className = "showOpaque";
+          document.querySelector("#spectating").className = "show";
         });
         _this2.socket.on("notinroom", function () {
           console.log("notinroom");

@@ -30,10 +30,6 @@ var Wiggle = /*#__PURE__*/function (_DynamicObject) {
     _this["class"] = Wiggle;
     _this.bodyParts = [];
     _this.score = 0;
-    _this.stat_XP = "";
-    _this.stat_level = "";
-    _this.stat_blocks = "";
-    _this.stat_blocksPerGame = "";
     _this.stat_foodPerGame = "";
     return _this;
   }
@@ -45,11 +41,6 @@ var Wiggle = /*#__PURE__*/function (_DynamicObject) {
       this.bodyLength = other.bodyLength;
       this.name = other.name;
       this.score = other.score;
-      this.stat_XP = other.stat_XP;
-      this.stat_level = other.stat_level;
-      this.stat_blocks = other.stat_blocks;
-      this.stat_blocksPerGame = other.stat_blocksPerGame;
-      this.stat_foodPerGame = other.stat_foodPerGame;
     }
   }, {
     key: "toString",
@@ -70,21 +61,6 @@ var Wiggle = /*#__PURE__*/function (_DynamicObject) {
           type: _lanceTopia.BaseTypes.TYPES.INT16
         },
         name: {
-          type: _lanceTopia.BaseTypes.TYPES.STRING
-        },
-        stat_XP: {
-          type: _lanceTopia.BaseTypes.TYPES.STRING
-        },
-        stat_level: {
-          type: _lanceTopia.BaseTypes.TYPES.STRING
-        },
-        stat_blocks: {
-          type: _lanceTopia.BaseTypes.TYPES.STRING
-        },
-        stat_blocksPerGame: {
-          type: _lanceTopia.BaseTypes.TYPES.STRING
-        },
-        stat_foodPerGame: {
           type: _lanceTopia.BaseTypes.TYPES.STRING
         }
       }, _get(_getPrototypeOf(Wiggle), "netScheme", this));
