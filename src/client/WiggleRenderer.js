@@ -79,7 +79,7 @@ export default class WiggleRenderer extends Renderer {
     ctx.fillStyle = "white";
     const fontSize = 0.4;
     ctx.font = `${fontSize}px Arial`;
-    var textToFill = w.stat_level ? w.name + " - lvl " + w.stat_level : w.name;
+    var textToFill = w.name;
     ctx.fillText(textToFill, x - textToFill.length / (4 / fontSize), y - 0.2);
     ctx.fillStyle = "white";
 
