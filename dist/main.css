@@ -94,11 +94,12 @@ canvas {
   top: 50%;
   text-align: center;
   cursor: crosshair;
+  width: 100%;
 }
 #instructions {
   position: absolute;
-  left: 10;
-  top: 10;
+  top: 0;
+  padding: 10px;
   cursor: crosshair;
   width: 100%;
   opacity: 1;
