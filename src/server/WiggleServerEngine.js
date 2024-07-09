@@ -4,7 +4,7 @@ import { ServerEngine } from "@rtsdk/lance-topia";
 import url from "url";
 import Wiggle from "../common/Wiggle";
 import Food from "../common/Food";
-import { errorHandler } from "../utils";
+import { addNewRowToGoogleSheets, errorHandler } from "../utils";
 import { getVisitor } from "../rtsdk";
 const nameGenerator = require("./NameGenerator");
 
@@ -86,8 +86,9 @@ export default class WiggleServerEngine extends ServerEngine {
       const parts = url.parse(URL, true);
       const query = parts.query;
       const req = { body: query }; // Used for interactive assets
-      const roomName = query.assetId;
-      this.urlSlug = query.urlSlug;
+      const { assetId, displayName, identityId, urlSlug } = query;
+      const roomName = assetId;
+      this.urlSlug = urlSlug;
 
       const { success, visitor } = await getVisitor(query);
       if (!success) return socket.emit("error", message);
@@ -134,7 +135,15 @@ export default class WiggleServerEngine extends ServerEngine {
           this.gameEngine.addObjectToWorld(player);
           this.assignObjectToRoom(player, roomName);
 
-          this.visitor.updatePublicKeyAnalytics([{ analyticName: "starts", profileId, urlSlug: this.urlSlug }]);
+          this.visitor.updatePublicKeyAnalytics([{ analyticName: "starts", profileId, urlSlug }]);
+          addNewRowToGoogleSheets([
+            {
+              identityId,
+              displayName,
+              event: "starts",
+              urlSlug,
+            },
+          ]);
         };
 
         // handle client restart requests
@@ -143,7 +152,7 @@ export default class WiggleServerEngine extends ServerEngine {
         // User is spectating because not in private zone
         socket.emit("spectating");
       }
-      this.visitor.updatePublicKeyAnalytics([{ analyticName: "joins", profileId, urlSlug: this.urlSlug }]);
+      this.visitor.updatePublicKeyAnalytics([{ analyticName: "joins", profileId, urlSlug }]);
     } catch (error) {
       errorHandler({
         error,

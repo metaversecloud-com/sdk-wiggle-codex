@@ -139,7 +139,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function () {
       var _joinRoom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(socket) {
         var _this2 = this;
-        var URL, parts, query, req, roomName, _yield$getVisitor, success, visitor, profileId, username, makePlayerWiggle;
+        var URL, parts, query, req, assetId, displayName, identityId, urlSlug, roomName, _yield$getVisitor, success, visitor, profileId, username, makePlayerWiggle;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -150,29 +150,30 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               req = {
                 body: query
               }; // Used for interactive assets
-              roomName = query.assetId;
-              this.urlSlug = query.urlSlug;
-              _context2.next = 9;
+              assetId = query.assetId, displayName = query.displayName, identityId = query.identityId, urlSlug = query.urlSlug;
+              roomName = assetId;
+              this.urlSlug = urlSlug;
+              _context2.next = 10;
               return (0, _rtsdk.getVisitor)(query);
-            case 9:
+            case 10:
               _yield$getVisitor = _context2.sent;
               success = _yield$getVisitor.success;
               visitor = _yield$getVisitor.visitor;
               if (success) {
-                _context2.next = 14;
+                _context2.next = 15;
                 break;
               }
               return _context2.abrupt("return", socket.emit("error", message));
-            case 14:
+            case 15:
               this.visitor = visitor;
               profileId = visitor.profileId, username = visitor.username;
               if (roomName) {
-                _context2.next = 19;
+                _context2.next = 20;
                 break;
               }
               socket.emit("notinroom");
               return _context2.abrupt("return");
-            case 19:
+            case 20:
               if (!this.rooms || !this.rooms[roomName]) {
                 _get(_getPrototypeOf(WiggleServerEngine.prototype), "createRoom", this).call(this, roomName);
                 this.generateRoom(roomName);
@@ -181,13 +182,13 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               this.roomPopulation[roomName]++;
               _get(_getPrototypeOf(WiggleServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
               if (!(username === -1)) {
-                _context2.next = 26;
+                _context2.next = 27;
                 break;
               }
               // If user isn't in world they can't spectate or participate
               socket.emit("error");
               return _context2.abrupt("return");
-            case 26:
+            case 27:
               if (username) {
                 socket.emit("inzone");
                 makePlayerWiggle = /*#__PURE__*/function () {
@@ -213,9 +214,15 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                           _this2.visitor.updatePublicKeyAnalytics([{
                             analyticName: "starts",
                             profileId: profileId,
-                            urlSlug: _this2.urlSlug
+                            urlSlug: urlSlug
                           }]);
-                        case 13:
+                          (0, _utils.addNewRowToGoogleSheets)([{
+                            identityId: identityId,
+                            displayName: displayName,
+                            event: "starts",
+                            urlSlug: urlSlug
+                          }]);
+                        case 14:
                         case "end":
                           return _context.stop();
                       }
@@ -233,23 +240,23 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               this.visitor.updatePublicKeyAnalytics([{
                 analyticName: "joins",
                 profileId: profileId,
-                urlSlug: this.urlSlug
+                urlSlug: urlSlug
               }]);
-              _context2.next = 33;
+              _context2.next = 34;
               break;
-            case 30:
-              _context2.prev = 30;
+            case 31:
+              _context2.prev = 31;
               _context2.t0 = _context2["catch"](0);
               (0, _utils.errorHandler)({
                 error: _context2.t0,
                 functionName: "joinRoom",
                 message: "Error joining room"
               });
-            case 33:
+            case 34:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[0, 30]]);
+        }, _callee2, this, [[0, 31]]);
       }));
       function joinRoom(_x) {
         return _joinRoom.apply(this, arguments);
