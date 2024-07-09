@@ -12,7 +12,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var getVisitor = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(credentials) {
-    var assetId, urlSlug, visitorId, visitor, _visitor$dataObject, lockId, message;
+    var assetId, urlSlug, visitorId, visitor, _visitor$dataObject, lockId, landmarkZonesArray, message;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -74,7 +74,8 @@ var getVisitor = /*#__PURE__*/function () {
             message: "Error updating visitor object"
           });
         case 23:
-          if (!visitor.privateZoneId || visitor.privateZoneId !== assetId) {
+          landmarkZonesArray = visitor.landmarkZonesString.split(",");
+          if (!landmarkZonesArray.includes(assetId) && visitor.privateZoneId !== assetId) {
             // Not in the private zone. Can watch, but can't play.
             visitor.username = null;
           }
@@ -82,8 +83,8 @@ var getVisitor = /*#__PURE__*/function () {
             success: true,
             visitor: visitor
           });
-        case 27:
-          _context.prev = 27;
+        case 28:
+          _context.prev = 28;
           _context.t1 = _context["catch"](0);
           message = "Error getting visitor";
           (0, _errorHandler.errorHandler)({
@@ -96,11 +97,11 @@ var getVisitor = /*#__PURE__*/function () {
             message: message,
             success: false
           });
-        case 32:
+        case 33:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 27], [9, 20]]);
+    }, _callee, null, [[0, 28], [9, 20]]);
   }));
   return function getVisitor(_x) {
     return _ref.apply(this, arguments);

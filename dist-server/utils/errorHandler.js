@@ -10,20 +10,22 @@ var errorHandler = function errorHandler(_ref) {
     functionName = _ref.functionName,
     message = _ref.message;
   try {
-    if (credentials !== null && credentials !== void 0 && credentials.interactiveNonce) delete credentials.interactiveNonce;
-    console.error(JSON.stringify({
-      errorContext: {
-        message: message,
-        functionName: functionName
-      },
-      requestContext: {
-        credentials: credentials
-      },
-      error: JSON.stringify(error)
-    }));
-    return {
-      error: error
-    };
+    if (process.env.NODE_ENV === "development") console.log("Error:", error);else {
+      if (credentials !== null && credentials !== void 0 && credentials.interactiveNonce) delete credentials.interactiveNonce;
+      console.error(JSON.stringify({
+        errorContext: {
+          message: message,
+          functionName: functionName
+        },
+        requestContext: {
+          credentials: credentials
+        },
+        error: JSON.stringify(error)
+      }));
+      return {
+        error: error
+      };
+    }
   } catch (e) {
     console.error("❌ Error printing the logs", e);
     return {

@@ -19,7 +19,8 @@ export const getVisitor = async (credentials) => {
       errorHandler({ credentials, error, functionName: "getVisitor", message: "Error updating visitor object" });
     }
 
-    if (!visitor.privateZoneId || visitor.privateZoneId !== assetId) {
+    const landmarkZonesArray = visitor.landmarkZonesString.split(",");
+    if (!landmarkZonesArray.includes(assetId) && visitor.privateZoneId !== assetId) {
       // Not in the private zone. Can watch, but can't play.
       visitor.username = null;
     }
