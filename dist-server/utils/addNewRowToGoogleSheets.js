@@ -32,14 +32,13 @@ var addNewRowToGoogleSheets = /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          console.log("🚀 ~ file: addNewRowToGoogleSheets.js:16 ~ SSAEvents:", SSAEvents);
-          _context.prev = 1;
+          _context.prev = 0;
           if (process.env.GOOGLESHEETS_SHEET_ID) {
-            _context.next = 4;
+            _context.next = 3;
             break;
           }
           return _context.abrupt("return");
-        case 4:
+        case 3:
           data = [];
           _iterator = _createForOfIteratorHelper(SSAEvents);
           try {
@@ -57,7 +56,7 @@ var addNewRowToGoogleSheets = /*#__PURE__*/function () {
           } finally {
             _iterator.f();
           }
-          _context.next = 9;
+          _context.next = 8;
           return sheetsClient.spreadsheets.values.append({
             spreadsheetId: process.env.GOOGLESHEETS_SHEET_ID,
             range: process.env.GOOGLESHEETS_SHEET_RANGE || "Sheet1",
@@ -67,18 +66,18 @@ var addNewRowToGoogleSheets = /*#__PURE__*/function () {
               values: [].concat(data)
             }
           });
-        case 9:
-          _context.next = 14;
+        case 8:
+          _context.next = 13;
           break;
-        case 11:
-          _context.prev = 11;
-          _context.t0 = _context["catch"](1);
+        case 10:
+          _context.prev = 10;
+          _context.t0 = _context["catch"](0);
           console.error(JSON.stringify(_context.t0));
-        case 14:
+        case 13:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[1, 11]]);
+    }, _callee, null, [[0, 10]]);
   }));
   return function addNewRowToGoogleSheets(_x) {
     return _ref.apply(this, arguments);

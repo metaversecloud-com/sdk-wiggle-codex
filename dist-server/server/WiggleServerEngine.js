@@ -335,10 +335,19 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               } else {
                 w2.bodyLength += w1.bodyLength / 4;
               }
-              if (!w2.AI) this.visitor.updatePublicKeyAnalytics([{
-                analyticName: "kills",
-                profileId: this.visitor.profileId
-              }]);
+              if (!w2.AI) {
+                try {
+                  this.visitor.updatePublicKeyAnalytics([{
+                    analyticName: "kills",
+                    profileId: this.visitor.profileId
+                  }]);
+                  this.visitor.triggerParticle({
+                    name: "Flame"
+                  });
+                } catch (error) {
+                  console.error(error);
+                }
+              }
               this.wiggleDestroyed(w1);
             case 8:
             case "end":

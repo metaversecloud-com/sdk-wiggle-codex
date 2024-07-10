@@ -13,7 +13,6 @@ const auth = new JWT({
 const sheetsClient = sheets?.sheets({ version: "v4", auth });
 
 export const addNewRowToGoogleSheets = async (SSAEvents) => {
-  console.log("🚀 ~ file: addNewRowToGoogleSheets.js:16 ~ SSAEvents:", SSAEvents);
   try {
     // Only execute this function if we have GOOGLESHEETS_SHEET_ID in the environment variables.
     if (!process.env.GOOGLESHEETS_SHEET_ID) return;
