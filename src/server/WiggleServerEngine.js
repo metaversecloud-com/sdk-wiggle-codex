@@ -152,11 +152,7 @@ export default class WiggleServerEngine extends ServerEngine {
         // User is spectating because not in private zone
         socket.emit("spectating");
       }
-      console.log("🚀 ~ file: WiggleServerEngine.js:139 ~ this.visitor:", this.visitor);
-      console.log("🚀 ~ file: WiggleServerEngine.js:157 ~ profileId:", profileId);
-      console.log("🚀 ~ file: WiggleServerEngine.js:158 ~ urlSlug:", urlSlug);
-      const test = this.visitor.updatePublicKeyAnalytics([{ analyticName: "joins", profileId, urlSlug }]);
-      console.log("🚀 ~ file: WiggleServerEngine.js:159 ~ test:", test);
+      this.visitor.updatePublicKeyAnalytics([{ analyticName: "joins", profileId, urlSlug }]);
     } catch (error) {
       errorHandler({
         error,
