@@ -4,7 +4,7 @@ import { ServerEngine } from "@rtsdk/lance-topia";
 import url from "url";
 import Wiggle from "../common/Wiggle";
 import Food from "../common/Food";
-import { errorHandler } from "../utils";
+import { addNewRowToGoogleSheets, errorHandler } from "../utils";
 import { getVisitor } from "../rtsdk";
 const nameGenerator = require("./NameGenerator");
 
@@ -13,6 +13,8 @@ export default class WiggleServerEngine extends ServerEngine {
     super(io, gameEngine, inputOptions);
     this.gameEngine.on("postStep", this.stepLogic.bind(this));
     this.roomPopulation = {};
+    this.visitor = {};
+    this.urlSlug = "";
   }
 
   // create food and AI robots
@@ -84,12 +86,15 @@ export default class WiggleServerEngine extends ServerEngine {
       const parts = url.parse(URL, true);
       const query = parts.query;
       const req = { body: query }; // Used for interactive assets
-      const roomName = query.assetId;
+      const { assetId, displayName, identityId, urlSlug } = query;
+      const roomName = assetId;
+      this.urlSlug = urlSlug;
 
-      const getVisitorResult = await getVisitor(query);
-      if (!getVisitorResult.success) return socket.emit("error", getVisitorResult.message);
+      const { success, visitor } = await getVisitor(query);
+      if (!success) return socket.emit("error", message);
+      this.visitor = visitor;
 
-      const { profileId, username } = getVisitorResult.visitor;
+      const { profileId, username } = visitor;
       if (!roomName) {
         socket.emit("notinroom");
         return;
@@ -129,6 +134,16 @@ export default class WiggleServerEngine extends ServerEngine {
 
           this.gameEngine.addObjectToWorld(player);
           this.assignObjectToRoom(player, roomName);
+
+          this.visitor.updatePublicKeyAnalytics([{ analyticName: "starts", profileId, urlSlug }]);
+          addNewRowToGoogleSheets([
+            {
+              identityId,
+              displayName,
+              event: "starts",
+              urlSlug,
+            },
+          ]);
         };
 
         // handle client restart requests
@@ -137,6 +152,7 @@ export default class WiggleServerEngine extends ServerEngine {
         // User is spectating because not in private zone
         socket.emit("spectating");
       }
+      this.visitor.updatePublicKeyAnalytics([{ analyticName: "joins", profileId, urlSlug }]);
     } catch (error) {
       errorHandler({
         error,
@@ -176,6 +192,7 @@ export default class WiggleServerEngine extends ServerEngine {
     this.gameEngine.removeObjectFromWorld(f.id);
     w.bodyLength++;
     w.foodEaten++;
+    if (!w.AI) this.visitor.updatePublicKeyAnalytics([{ analyticName: "itemsEaten" }]);
     if (f) this.addFood(f.roomName);
   }
 
@@ -192,6 +209,16 @@ export default class WiggleServerEngine extends ServerEngine {
     } else {
       w2.bodyLength += w1.bodyLength / 4;
     }
+
+    if (!w2.AI) {
+      try {
+        this.visitor.updatePublicKeyAnalytics([{ analyticName: "kills", profileId: this.visitor.profileId }]);
+        this.visitor.triggerParticle({ name: "Flame" });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     this.wiggleDestroyed(w1);
   }
 
