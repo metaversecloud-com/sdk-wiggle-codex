@@ -21,7 +21,8 @@ export const getVisitor = async (credentials) => {
 
     const landmarkZonesArray = visitor.landmarkZonesString.split(",");
     if (!landmarkZonesArray.includes(assetId) && visitor.privateZoneId !== assetId) {
-      // Not in the private zone. Can watch, but can't play.
+      console.log("Visitor is not in zone");
+      // Not in the zone. Can watch, but can't play.
       visitor.username = null;
     }
     return { success: true, visitor };
