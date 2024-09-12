@@ -23,7 +23,7 @@ server.get("/system/health", (req, res) => {
   return res.json({
     appVersion: getVersion(),
     status: "OK",
-    deploymentDate: SERVER_START_DATE,
+    serverStartDate: SERVER_START_DATE,
     envs: {
       API_KEY: process.env.API_KEY ? "SET" : "NOT SET",
       INSTANCE_DOMAIN: process.env.INSTANCE_DOMAIN,
