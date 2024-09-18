@@ -213,7 +213,7 @@ export default class WiggleServerEngine extends ServerEngine {
     if (!w2.AI) {
       try {
         this.visitor.updatePublicKeyAnalytics([{ analyticName: "kills", profileId: this.visitor.profileId }]);
-        this.visitor.triggerParticle({ name: "Flame" });
+        this.visitor.triggerParticle({ name: "balloon_float" });
       } catch (error) {
         console.error(error);
       }
