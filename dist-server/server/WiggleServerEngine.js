@@ -342,7 +342,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                     profileId: this.visitor.profileId
                   }]);
                   this.visitor.triggerParticle({
-                    name: "Flame"
+                    name: "balloon_float"
                   });
                 } catch (error) {
                   console.error(error);
