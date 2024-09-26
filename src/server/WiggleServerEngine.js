@@ -192,7 +192,11 @@ export default class WiggleServerEngine extends ServerEngine {
     this.gameEngine.removeObjectFromWorld(f.id);
     w.bodyLength++;
     w.foodEaten++;
-    if (!w.AI) this.visitor.updatePublicKeyAnalytics([{ analyticName: "itemsEaten" }]);
+    try {
+      if (!w.AI) this.visitor.updatePublicKeyAnalytics([{ analyticName: "itemsEaten" }]);
+    } catch (error) {
+      console.error(error);
+    }
     if (f) this.addFood(f.roomName);
   }
 
