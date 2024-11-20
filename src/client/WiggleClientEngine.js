@@ -68,10 +68,6 @@ export default class WiggleClientEngine extends ClientEngine {
         document.querySelector("#spectating").className = "show";
       });
 
-      this.socket.on("notinroom", () => {
-        console.log("notinroom");
-      });
-
       this.socket.on("inzone", () => {
         document.querySelector("#spectating").className = "hidden";
         document.querySelector("#joinGame").className = "show";
@@ -84,12 +80,12 @@ export default class WiggleClientEngine extends ClientEngine {
       });
 
       this.socket.on("error", (e) => {
-        console.log("error", e);
+        console.error("error", e);
         if (e?.message) document.querySelector("#error").innerHTML = e.message;
       });
 
       this.socket.on("connection_error", (e) => {
-        console.log("Socket connection error", e);
+        console.error("Socket connection error", e);
       });
 
       this.socket.on("disconnect", (e) => {

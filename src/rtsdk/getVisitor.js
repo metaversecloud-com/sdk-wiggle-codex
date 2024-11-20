@@ -5,27 +5,16 @@ export const getVisitor = async (credentials) => {
   try {
     const { assetId, urlSlug, visitorId } = credentials;
     const visitor = await Visitor.get(visitorId, urlSlug, { credentials });
-    if (!visitor || !visitor.username) throw "Not in world";
+    if (!visitor) throw "Not in world";
 
-    await visitor.fetchDataObject();
-    try {
-      const lockId = `${visitorId}-lastVisited-${new Date(Math.round(new Date().getTime() / 60000) * 60000)}`;
-      if (!visitor.dataObject || !visitor.dataObject?.lastVisited) {
-        await visitor.setDataObject({ lastVisited: Date.now() }, { lock: { lockId }, releaseLock: true });
-      } else {
-        await visitor.updateDataObject({ lastVisited: Date.now() }, { lock: { lockId }, releaseLock: true });
-      }
-    } catch (error) {
-      errorHandler({ credentials, error, functionName: "getVisitor", message: "Error updating visitor object" });
-    }
-
+    let isInZone = true;
     const landmarkZonesArray = visitor.landmarkZonesString.split(",");
     if (!landmarkZonesArray.includes(assetId) && visitor.privateZoneId !== assetId) {
+      isInZone = false;
       console.log("Visitor is not in zone");
       // Not in the zone. Can watch, but can't play.
-      visitor.username = null;
     }
-    return { success: true, visitor };
+    return { success: true, visitor, isInZone };
   } catch (error) {
     const message = "Error getting visitor";
     errorHandler({ credentials, error, functionName: "getVisitor", message });

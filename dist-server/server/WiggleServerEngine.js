@@ -44,6 +44,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
     _this.roomPopulation = {};
     _this.visitor = {};
     _this.urlSlug = "";
+    _this.isPlaying = false;
     return _this;
   }
 
@@ -139,7 +140,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function () {
       var _joinRoom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(socket) {
         var _this2 = this;
-        var URL, parts, query, req, assetId, displayName, identityId, urlSlug, roomName, _yield$getVisitor, success, visitor, profileId, username, makePlayerWiggle;
+        var URL, parts, query, req, assetId, displayName, identityId, urlSlug, roomName, _yield$getVisitor, success, visitor, isInZone, profileId, username, makePlayerWiggle;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -153,27 +154,27 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               assetId = query.assetId, displayName = query.displayName, identityId = query.identityId, urlSlug = query.urlSlug;
               roomName = assetId;
               this.urlSlug = urlSlug;
-              _context2.next = 10;
-              return (0, _rtsdk.getVisitor)(query);
+              if (roomName) {
+                _context2.next = 10;
+                break;
+              }
+              return _context2.abrupt("return");
             case 10:
+              _context2.next = 12;
+              return (0, _rtsdk.getVisitor)(query);
+            case 12:
               _yield$getVisitor = _context2.sent;
               success = _yield$getVisitor.success;
               visitor = _yield$getVisitor.visitor;
+              isInZone = _yield$getVisitor.isInZone;
               if (success) {
-                _context2.next = 15;
+                _context2.next = 18;
                 break;
               }
               return _context2.abrupt("return", socket.emit("error", message));
-            case 15:
+            case 18:
               this.visitor = visitor;
               profileId = visitor.profileId, username = visitor.username;
-              if (roomName) {
-                _context2.next = 20;
-                break;
-              }
-              socket.emit("notinroom");
-              return _context2.abrupt("return");
-            case 20:
               if (!this.rooms || !this.rooms[roomName]) {
                 _get(_getPrototypeOf(WiggleServerEngine.prototype), "createRoom", this).call(this, roomName);
                 this.generateRoom(roomName);
@@ -181,15 +182,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               this.roomPopulation[roomName] = this.roomPopulation[roomName] || 0;
               this.roomPopulation[roomName]++;
               _get(_getPrototypeOf(WiggleServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
-              if (!(username === -1)) {
-                _context2.next = 27;
-                break;
-              }
-              // If user isn't in world they can't spectate or participate
-              socket.emit("error");
-              return _context2.abrupt("return");
-            case 27:
-              if (username) {
+              if (isInZone) {
                 socket.emit("inzone");
                 makePlayerWiggle = /*#__PURE__*/function () {
                   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -197,6 +190,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                     return _regeneratorRuntime().wrap(function _callee$(_context) {
                       while (1) switch (_context.prev = _context.next) {
                         case 0:
+                          _this2.isPlaying = true;
                           player = new _Wiggle["default"](_this2.gameEngine, null, {
                             position: _this2.gameEngine.randPos()
                           });
@@ -214,6 +208,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                           _this2.visitor.updatePublicKeyAnalytics([{
                             analyticName: "starts",
                             profileId: profileId,
+                            uniqueKey: profileId,
                             urlSlug: urlSlug
                           }]);
                           (0, _utils.addNewRowToGoogleSheets)([{
@@ -222,7 +217,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                             event: "starts",
                             urlSlug: urlSlug
                           }]);
-                        case 14:
+                        case 15:
                         case "end":
                           return _context.stop();
                       }
@@ -240,23 +235,24 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               this.visitor.updatePublicKeyAnalytics([{
                 analyticName: "joins",
                 profileId: profileId,
+                uniqueKey: profileId,
                 urlSlug: urlSlug
               }]);
-              _context2.next = 34;
+              _context2.next = 31;
               break;
-            case 31:
-              _context2.prev = 31;
+            case 28:
+              _context2.prev = 28;
               _context2.t0 = _context2["catch"](0);
               (0, _utils.errorHandler)({
                 error: _context2.t0,
                 functionName: "joinRoom",
                 message: "Error joining room"
               });
-            case 34:
+            case 31:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[0, 31]]);
+        }, _callee2, this, [[0, 28]]);
       }));
       function joinRoom(_x) {
         return _joinRoom.apply(this, arguments);
@@ -302,9 +298,13 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
       this.gameEngine.removeObjectFromWorld(f.id);
       w.bodyLength++;
       w.foodEaten++;
-      if (!w.AI) this.visitor.updatePublicKeyAnalytics([{
-        analyticName: "itemsEaten"
-      }]);
+      try {
+        if (!w.AI) this.visitor.updatePublicKeyAnalytics([{
+          analyticName: "itemsEaten"
+        }]);
+      } catch (error) {
+        console.error(error);
+      }
       if (f) this.addFood(f.roomName);
     }
   }, {
@@ -393,6 +393,10 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function stepLogic(stepObj) {
       // TODO: possibly make more efficient by only looping through active rooms with this.rooms
       // Can add roomName to queryObjects
+
+      // potentially helps with performance but prevents bots from moving before a game has started
+      // if (this.gameEngine.world.playerCount === 0 || !this.isPlaying) return;
+
       var wiggles = this.gameEngine.world.queryObjects({
         instanceType: _Wiggle["default"]
       });

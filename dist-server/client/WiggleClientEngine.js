@@ -100,9 +100,6 @@ var WiggleClientEngine = /*#__PURE__*/function (_ClientEngine) {
           console.log("spectating");
           document.querySelector("#spectating").className = "show";
         });
-        _this2.socket.on("notinroom", function () {
-          console.log("notinroom");
-        });
         _this2.socket.on("inzone", function () {
           document.querySelector("#spectating").className = "hidden";
           document.querySelector("#joinGame").className = "show";
@@ -114,11 +111,11 @@ var WiggleClientEngine = /*#__PURE__*/function (_ClientEngine) {
           });
         });
         _this2.socket.on("error", function (e) {
-          console.log("error", e);
+          console.error("error", e);
           if (e !== null && e !== void 0 && e.message) document.querySelector("#error").innerHTML = e.message;
         });
         _this2.socket.on("connection_error", function (e) {
-          console.log("Socket connection error", e);
+          console.error("Socket connection error", e);
         });
         _this2.socket.on("disconnect", function (e) {
           console.log("disconnected");
