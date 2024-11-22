@@ -103,15 +103,15 @@ export default class WiggleServerEngine extends ServerEngine {
         this.generateRoom(roomName);
       }
 
-      this.roomPopulation[roomName] = this.roomPopulation[roomName] || 0;
-      this.roomPopulation[roomName]++;
-
-      super.assignPlayerToRoom(socket.playerId, roomName);
-
       if (isInZone) {
         socket.emit("inzone");
 
         const makePlayerWiggle = async () => {
+          this.roomPopulation[roomName] = this.roomPopulation[roomName] || 0;
+          this.roomPopulation[roomName]++;
+
+          super.assignPlayerToRoom(socket.playerId, roomName);
+
           this.isPlaying = true;
           let player = new Wiggle(this.gameEngine, null, {
             position: this.gameEngine.randPos(),
@@ -169,13 +169,6 @@ export default class WiggleServerEngine extends ServerEngine {
       });
       if (wiggles.length <= this.gameEngine.aiCount) this.addAI(roomName);
     }
-  }
-
-  // THis isn't working properly
-  onPlayerRoomUpdate(playerId, from, to) {
-    let playerWiggle = this.gameEngine.world.queryObject({ playerId });
-    console.log("Player room", playerWiggle.roomName);
-    console.log("Player left room", from);
   }
 
   // Eating Food:
@@ -249,8 +242,7 @@ export default class WiggleServerEngine extends ServerEngine {
     // TODO: possibly make more efficient by only looping through active rooms with this.rooms
     // Can add roomName to queryObjects
 
-    // potentially helps with performance but prevents bots from moving before a game has started
-    // if (this.gameEngine.world.playerCount === 0 || !this.isPlaying) return;
+    if (this.gameEngine.world.playerCount === 0 || !this.isPlaying) return;
 
     let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle });
     let foodObjects = this.gameEngine.world.queryObjects({ instanceType: Food });
@@ -260,9 +252,7 @@ export default class WiggleServerEngine extends ServerEngine {
 
     for (let w of wiggles) {
       // Skip if that room doesn't have anyone in it
-      if (!this.roomPopulation[w.roomName] || !this.rooms[w.roomName]) {
-        continue;
-      }
+      if (!this.roomPopulation[w.roomName] || !this.rooms[w.roomName]) continue;
 
       // check for collision
       for (let w2 of wiggles) {

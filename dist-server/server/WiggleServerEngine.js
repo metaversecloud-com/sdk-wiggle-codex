@@ -179,9 +179,6 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                 _get(_getPrototypeOf(WiggleServerEngine.prototype), "createRoom", this).call(this, roomName);
                 this.generateRoom(roomName);
               }
-              this.roomPopulation[roomName] = this.roomPopulation[roomName] || 0;
-              this.roomPopulation[roomName]++;
-              _get(_getPrototypeOf(WiggleServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
               if (isInZone) {
                 socket.emit("inzone");
                 makePlayerWiggle = /*#__PURE__*/function () {
@@ -190,6 +187,9 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                     return _regeneratorRuntime().wrap(function _callee$(_context) {
                       while (1) switch (_context.prev = _context.next) {
                         case 0:
+                          _this2.roomPopulation[roomName] = _this2.roomPopulation[roomName] || 0;
+                          _this2.roomPopulation[roomName]++;
+                          _get(_getPrototypeOf(WiggleServerEngine.prototype), "assignPlayerToRoom", _this2).call(_this2, socket.playerId, roomName);
                           _this2.isPlaying = true;
                           player = new _Wiggle["default"](_this2.gameEngine, null, {
                             position: _this2.gameEngine.randPos()
@@ -217,7 +217,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                             event: "starts",
                             urlSlug: urlSlug
                           }]);
-                        case 15:
+                        case 18:
                         case "end":
                           return _context.stop();
                       }
@@ -238,21 +238,21 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                 uniqueKey: profileId,
                 urlSlug: urlSlug
               }]);
-              _context2.next = 31;
+              _context2.next = 28;
               break;
-            case 28:
-              _context2.prev = 28;
+            case 25:
+              _context2.prev = 25;
               _context2.t0 = _context2["catch"](0);
               (0, _utils.errorHandler)({
                 error: _context2.t0,
                 functionName: "joinRoom",
                 message: "Error joining room"
               });
-            case 31:
+            case 28:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[0, 28]]);
+        }, _callee2, this, [[0, 25]]);
       }));
       function joinRoom(_x) {
         return _joinRoom.apply(this, arguments);
@@ -275,17 +275,6 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
         });
         if (wiggles.length <= this.gameEngine.aiCount) this.addAI(roomName);
       }
-    }
-
-    // THis isn't working properly
-  }, {
-    key: "onPlayerRoomUpdate",
-    value: function onPlayerRoomUpdate(playerId, from, to) {
-      var playerWiggle = this.gameEngine.world.queryObject({
-        playerId: playerId
-      });
-      console.log("Player room", playerWiggle.roomName);
-      console.log("Player left room", from);
     }
 
     // Eating Food:
@@ -394,9 +383,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
       // TODO: possibly make more efficient by only looping through active rooms with this.rooms
       // Can add roomName to queryObjects
 
-      // potentially helps with performance but prevents bots from moving before a game has started
-      // if (this.gameEngine.world.playerCount === 0 || !this.isPlaying) return;
-
+      if (this.gameEngine.world.playerCount === 0 || !this.isPlaying) return;
       var wiggles = this.gameEngine.world.queryObjects({
         instanceType: _Wiggle["default"]
       });
@@ -405,18 +392,14 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
       });
 
       // Check room populations every 500 ticks to prevent game logic in rooms that have no players
-      if (stepObj.step % 500 === 0) {
-        this.getRoomsWithPlayers();
-      }
+      if (stepObj.step % 500 === 0) this.getRoomsWithPlayers();
       var _iterator3 = _createForOfIteratorHelper(wiggles),
         _step3;
       try {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var w = _step3.value;
           // Skip if that room doesn't have anyone in it
-          if (!this.roomPopulation[w.roomName] || !this.rooms[w.roomName]) {
-            continue;
-          }
+          if (!this.roomPopulation[w.roomName] || !this.rooms[w.roomName]) continue;
 
           // check for collision
           var _iterator4 = _createForOfIteratorHelper(wiggles),
@@ -448,9 +431,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
               var f = _step5.value;
               if (w.roomName !== f.roomName) continue;
               var _distance = w.position.clone().subtract(f.position);
-              if (_distance.length() < this.gameEngine.eatDistance) {
-                this.wiggleEatFood(w, f);
-              }
+              if (_distance.length() < this.gameEngine.eatDistance) this.wiggleEatFood(w, f);
             }
 
             // Slowly (and somewhat randomly) reduce length to prevent just sitting and hiding

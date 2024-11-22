@@ -85,7 +85,7 @@ var WiggleGameEngine = /*#__PURE__*/function (_GameEngine) {
     key: "moveAll",
     value: function moveAll(stepInfo) {
       var _this2 = this;
-      if (stepInfo.isReenact) return;
+      if (stepInfo.isReenact || this.world.playerCount === 0) return;
       this.world.forEachObject(function (id, obj) {
         if (obj instanceof _Wiggle["default"]) {
           // if the position changed, add a body part and trim the length
