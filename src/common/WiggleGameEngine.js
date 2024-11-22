@@ -54,7 +54,7 @@ export default class WiggleGameEngine extends GameEngine {
   }
 
   moveAll(stepInfo) {
-    if (stepInfo.isReenact || this.world.playerCount === 0) return;
+    if (stepInfo.isReenact) return;
 
     this.world.forEachObject((id, obj) => {
       if (obj instanceof Wiggle) {
