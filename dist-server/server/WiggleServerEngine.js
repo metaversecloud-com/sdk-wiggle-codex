@@ -179,6 +179,9 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                 _get(_getPrototypeOf(WiggleServerEngine.prototype), "createRoom", this).call(this, roomName);
                 this.generateRoom(roomName);
               }
+              this.roomPopulation[roomName] = this.roomPopulation[roomName] || 0;
+              this.roomPopulation[roomName]++;
+              _get(_getPrototypeOf(WiggleServerEngine.prototype), "assignPlayerToRoom", this).call(this, socket.playerId, roomName);
               if (isInZone) {
                 socket.emit("inzone");
                 makePlayerWiggle = /*#__PURE__*/function () {
@@ -187,9 +190,6 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                     return _regeneratorRuntime().wrap(function _callee$(_context) {
                       while (1) switch (_context.prev = _context.next) {
                         case 0:
-                          _this2.roomPopulation[roomName] = _this2.roomPopulation[roomName] || 0;
-                          _this2.roomPopulation[roomName]++;
-                          _get(_getPrototypeOf(WiggleServerEngine.prototype), "assignPlayerToRoom", _this2).call(_this2, socket.playerId, roomName);
                           _this2.isPlaying = true;
                           player = new _Wiggle["default"](_this2.gameEngine, null, {
                             position: _this2.gameEngine.randPos()
@@ -217,7 +217,7 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                             event: "starts",
                             urlSlug: urlSlug
                           }]);
-                        case 18:
+                        case 15:
                         case "end":
                           return _context.stop();
                       }
@@ -238,21 +238,21 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
                 uniqueKey: profileId,
                 urlSlug: urlSlug
               }]);
-              _context2.next = 28;
+              _context2.next = 31;
               break;
-            case 25:
-              _context2.prev = 25;
+            case 28:
+              _context2.prev = 28;
               _context2.t0 = _context2["catch"](0);
               (0, _utils.errorHandler)({
                 error: _context2.t0,
                 functionName: "joinRoom",
                 message: "Error joining room"
               });
-            case 28:
+            case 31:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, this, [[0, 25]]);
+        }, _callee2, this, [[0, 28]]);
       }));
       function joinRoom(_x) {
         return _joinRoom.apply(this, arguments);
@@ -382,8 +382,6 @@ var WiggleServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function stepLogic(stepObj) {
       // TODO: possibly make more efficient by only looping through active rooms with this.rooms
       // Can add roomName to queryObjects
-
-      if (this.gameEngine.world.playerCount === 0 || !this.isPlaying) return;
       var wiggles = this.gameEngine.world.queryObjects({
         instanceType: _Wiggle["default"]
       });
