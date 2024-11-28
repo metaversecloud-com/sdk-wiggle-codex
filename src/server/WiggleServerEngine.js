@@ -103,15 +103,14 @@ export default class WiggleServerEngine extends ServerEngine {
         this.generateRoom(roomName);
       }
 
+      this.roomPopulation[roomName] = this.roomPopulation[roomName] || 0;
+      this.roomPopulation[roomName]++;
+
+      super.assignPlayerToRoom(socket.playerId, roomName);
       if (isInZone) {
         socket.emit("inzone");
 
         const makePlayerWiggle = async () => {
-          this.roomPopulation[roomName] = this.roomPopulation[roomName] || 0;
-          this.roomPopulation[roomName]++;
-
-          super.assignPlayerToRoom(socket.playerId, roomName);
-
           this.isPlaying = true;
           let player = new Wiggle(this.gameEngine, null, {
             position: this.gameEngine.randPos(),
