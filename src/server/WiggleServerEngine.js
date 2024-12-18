@@ -15,6 +15,7 @@ export default class WiggleServerEngine extends ServerEngine {
     this.roomPopulation = {};
     this.visitor = {};
     this.urlSlug = "";
+    this.isPlaying = false;
   }
 
   // create food and AI robots
@@ -90,15 +91,13 @@ export default class WiggleServerEngine extends ServerEngine {
       const roomName = assetId;
       this.urlSlug = urlSlug;
 
-      const { success, visitor } = await getVisitor(query);
+      if (!roomName) return;
+
+      const { success, visitor, isInZone } = await getVisitor(query);
       if (!success) return socket.emit("error", message);
       this.visitor = visitor;
 
       const { profileId, username } = visitor;
-      if (!roomName) {
-        socket.emit("notinroom");
-        return;
-      }
       if (!this.rooms || !this.rooms[roomName]) {
         super.createRoom(roomName);
         this.generateRoom(roomName);
@@ -108,17 +107,11 @@ export default class WiggleServerEngine extends ServerEngine {
       this.roomPopulation[roomName]++;
 
       super.assignPlayerToRoom(socket.playerId, roomName);
-
-      if (username === -1) {
-        // If user isn't in world they can't spectate or participate
-        socket.emit("error");
-        return;
-      }
-
-      if (username) {
+      if (isInZone) {
         socket.emit("inzone");
 
         const makePlayerWiggle = async () => {
+          this.isPlaying = true;
           let player = new Wiggle(this.gameEngine, null, {
             position: this.gameEngine.randPos(),
           });
@@ -135,7 +128,7 @@ export default class WiggleServerEngine extends ServerEngine {
           this.gameEngine.addObjectToWorld(player);
           this.assignObjectToRoom(player, roomName);
 
-          this.visitor.updatePublicKeyAnalytics([{ analyticName: "starts", profileId, urlSlug }]);
+          this.visitor.updatePublicKeyAnalytics([{ analyticName: "starts", profileId, uniqueKey: profileId, urlSlug }]);
           addNewRowToGoogleSheets([
             {
               identityId,
@@ -152,7 +145,7 @@ export default class WiggleServerEngine extends ServerEngine {
         // User is spectating because not in private zone
         socket.emit("spectating");
       }
-      this.visitor.updatePublicKeyAnalytics([{ analyticName: "joins", profileId, urlSlug }]);
+      this.visitor.updatePublicKeyAnalytics([{ analyticName: "joins", profileId, uniqueKey: profileId, urlSlug }]);
     } catch (error) {
       errorHandler({
         error,
@@ -175,13 +168,6 @@ export default class WiggleServerEngine extends ServerEngine {
       });
       if (wiggles.length <= this.gameEngine.aiCount) this.addAI(roomName);
     }
-  }
-
-  // THis isn't working properly
-  onPlayerRoomUpdate(playerId, from, to) {
-    let playerWiggle = this.gameEngine.world.queryObject({ playerId });
-    console.log("Player room", playerWiggle.roomName);
-    console.log("Player left room", from);
   }
 
   // Eating Food:
@@ -255,20 +241,14 @@ export default class WiggleServerEngine extends ServerEngine {
     // TODO: possibly make more efficient by only looping through active rooms with this.rooms
     // Can add roomName to queryObjects
     let wiggles = this.gameEngine.world.queryObjects({ instanceType: Wiggle });
-    let foodObjects = this.gameEngine.world.queryObjects({
-      instanceType: Food,
-    });
+    let foodObjects = this.gameEngine.world.queryObjects({ instanceType: Food });
 
     // Check room populations every 500 ticks to prevent game logic in rooms that have no players
-    if (stepObj.step % 500 === 0) {
-      this.getRoomsWithPlayers();
-    }
+    if (stepObj.step % 500 === 0) this.getRoomsWithPlayers();
 
     for (let w of wiggles) {
       // Skip if that room doesn't have anyone in it
-      if (!this.roomPopulation[w.roomName] || !this.rooms[w.roomName]) {
-        continue;
-      }
+      if (!this.roomPopulation[w.roomName] || !this.rooms[w.roomName]) continue;
 
       // check for collision
       for (let w2 of wiggles) {
@@ -287,9 +267,7 @@ export default class WiggleServerEngine extends ServerEngine {
       for (let f of foodObjects) {
         if (w.roomName !== f.roomName) continue;
         let distance = w.position.clone().subtract(f.position);
-        if (distance.length() < this.gameEngine.eatDistance) {
-          this.wiggleEatFood(w, f);
-        }
+        if (distance.length() < this.gameEngine.eatDistance) this.wiggleEatFood(w, f);
       }
 
       // Slowly (and somewhat randomly) reduce length to prevent just sitting and hiding
