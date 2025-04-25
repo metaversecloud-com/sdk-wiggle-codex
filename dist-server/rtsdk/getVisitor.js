@@ -12,15 +12,21 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var getVisitor = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(credentials) {
-    var assetId, urlSlug, visitorId, visitor, isInZone, landmarkZonesArray, message;
+    var assetId, interactiveNonce, interactivePublicKey, urlSlug, visitorId, visitor, isInZone, landmarkZonesArray, message;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          assetId = credentials.assetId, urlSlug = credentials.urlSlug, visitorId = credentials.visitorId;
+          assetId = credentials.assetId, interactiveNonce = credentials.interactiveNonce, interactivePublicKey = credentials.interactivePublicKey, urlSlug = credentials.urlSlug, visitorId = credentials.visitorId; // specifying credentials here to avoid passing gameEngineId and iframeId
           _context.next = 4;
           return _topiaInit.Visitor.get(visitorId, urlSlug, {
-            credentials: credentials
+            credentials: {
+              assetId: assetId,
+              interactiveNonce: interactiveNonce,
+              interactivePublicKey: interactivePublicKey,
+              urlSlug: urlSlug,
+              visitorId: visitorId
+            }
           });
         case 4:
           visitor = _context.sent;
