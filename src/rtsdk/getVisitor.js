@@ -3,8 +3,11 @@ import { Visitor } from "./topiaInit.js";
 
 export const getVisitor = async (credentials) => {
   try {
-    const { assetId, urlSlug, visitorId } = credentials;
-    const visitor = await Visitor.get(visitorId, urlSlug, { credentials });
+    const { assetId, interactiveNonce, interactivePublicKey, urlSlug, visitorId } = credentials;
+    // specifying credentials here to avoid passing gameEngineId and iframeId
+    const visitor = await Visitor.get(visitorId, urlSlug, {
+      credentials: { assetId, interactiveNonce, interactivePublicKey, urlSlug, visitorId },
+    });
     if (!visitor) throw "Not in world";
 
     let isInZone = true;
