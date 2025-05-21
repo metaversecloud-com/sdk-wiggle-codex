@@ -1,10 +1,6 @@
 # Repository Overview
 
-This project contains a networked multiplayer "snake" style game called **Wiggle**. The README briefly introduces the gameplay and how players interact with it:
-
-```text
-# Wiggle
-Wiggle is configured with the [Topia SDK](https://metaversecloud-com.github.io/mc-sdk-js).
+This project contains a networked multiplayer "snake" style game called **Wiggle**, which utilizes [Topia SDK](https://metaversecloud-com.github.io/mc-sdk-js) and [Lance.gg](https://lance-gg.github.io/). The README briefly introduces the gameplay and how players interact with it:
 
 ### How To Play
 - Users can play by walking inside of the game asset’s private zone
